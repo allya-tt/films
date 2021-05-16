@@ -1,5 +1,4 @@
 from collections import Counter, defaultdict
-
 with open('input.txt', 'r', encoding='utf-8') as fl:  # получение словаря путем считывания строк из файла,
     # ключи - фильмы, актеры - значения
     onstring = fl.readlines()
