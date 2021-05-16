@@ -1,5 +1,5 @@
-from collections import Counter
-with open('input.txt', 'r',  encoding='utf-8') as fl: #получение словаря путем считывания строк из файла
+from collections import Counter, defaultdict
+with open('input.txt', 'r',  encoding='utf-8') as fl:
     onstring = fl.readlines()
     d = {}
     for i in onstring:
@@ -9,6 +9,7 @@ with open('input.txt', 'r',  encoding='utf-8') as fl: #получение сло
             i=i
         k, *v = i.split(' ')
         d.update({k:v})
+print(d)
 print('Выберите один пункт из представленных ниже: \n'
       '1) по 2-м названиям фильмов вывести общий актерский состав, список актеров, снимавшихся и в первом,'
       ' и во втором фильме и список актеров, участвующих в съемках первого, но не участвующих в съемках второго \n'
@@ -25,7 +26,7 @@ if menu==1:
     print('Общий актерский состав, (актеры, снявшиеся хотя бы в одном из этих двух фильмов):', z)
     conjunction=[k for k,v in Counter(m).items() if v>1] #список повторяющихся фамилий
     y=', '.join(conjunction)
-    print('Актеры, снявшиеся и в первом, и во втором фильме: ',y)
+    print('Актеры, снявшиеся и в первом, и во втором фильме:',y)
 
     for i in actors_for_first[:]:
           if i in actors_for_second:
@@ -33,3 +34,25 @@ if menu==1:
     u=', '.join(actors_for_first)
 
     print('Актеры, участвующие в съемках первого, но не участвующие в съемках второго: ', u)
+elif menu==2:
+    str1, str2 = input('Введите две фамилии актеров: ').split()
+    y = defaultdict(list)
+    for key, values in d.items():
+        for value in values:
+            y[value].append(key)
+    films_for_first = (y.get(str1))  # список фильмов для 1-го актера
+    films_for_second = y.get(str2)  # список фильмов для 2-го актера
+    m = (films_for_first + films_for_second)  # общий список (с повторениями)
+    o = list(set(m))  # исключение повторяющихся фамилий
+    z = ', '.join(o)
+    print('Названия фильмов, в которых снимался хотя бы в одном из актеров:', z)
+    conjunction = [k for k, v in Counter(m).items() if v > 1]  # список повторяющихся фамилий
+    y = ', '.join(conjunction)
+    print('Названия фильмов, в которых снимались оба актера:', y)
+
+    for i in films_for_first[:]:
+        if i in films_for_second:
+            films_for_first.remove(i)
+    u = ', '.join(films_for_second)
+
+    print('Названия фильмов, в которых снимался первый актер, но не участвовал в съемках второй:', u)
